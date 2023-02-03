@@ -15,3 +15,134 @@ def dfs(start) :
         ans.pop()
 
 dfs(0)
+
+#10972
+#백트래킹으로 시도 하지만 n의 범위가 커서 실패
+n = int(input())
+li = list(map(int,input().split()))
+
+visited = [False for _ in range(n)]
+num = list(range(1,n+1))
+ans = []
+switch = 0
+def dfs() :
+    global switch
+    if len(ans) == n :
+        if ans == li:
+            switch = 1
+            return 
+        
+        elif switch == 1:
+            for i in ans :
+                print(i,end=' ')
+            switch = 0
+            return
+        
+    for i in range(n) :
+        if not visited[i] :
+            visited[i] = True
+            ans.append(num[i])
+            dfs()
+            visited[i] = False
+            ans.pop()
+print(-1) if li == list(reversed(num)) else dfs()
+#성공코드
+n = int(input())
+li = list(map(int,input().split()))
+
+for i in range(n-1,0,-1) :
+    if li[i-1] < li[i] :
+        for j in range(n-1,-1,-1) :
+            if li[i-1] < li[j] :
+                li[i-1], li[j] = li[j], li[i-1]
+                li = li[:i] + sorted(li[i:])
+                for k in li :
+                    print(k,end=' ')
+                exit()
+print(-1)
+#배운것 exit() 코드 강종
+#10973
+n = int(input())
+li = list(map(int,input().split()))
+
+for i in range(n-1,0,-1) :
+    if li[i-1] > li[i] :
+        for j in range(n-1,-1,-1) :
+            if li[i-1] > li[j] :
+                li[i-1], li[j] = li[j], li[i-1]
+                li = li[:i] + sorted(li[i:],reverse=True)
+                for k in li :
+                    print(k,end=' ')
+                exit()
+print(-1)
+
+#10974
+n = int(input())
+li = list(range(1,n+1))
+
+visited = [False for _ in range(n)]
+ans = []
+
+def dfs() :
+    if len(ans) == n :
+        print(*ans)
+    for i in range(n) :
+        if not visited[i] :
+            visited[i] = True
+            ans.append(li[i])
+            dfs()
+            visited[i] = False
+            ans.pop()
+dfs()
+
+#10819
+n = int(input())
+li = list(map(int,input().split()))
+
+visited = [False for _ in range(n)]
+ans = []
+max_sum = 0
+def dfs() :
+    global max_sum
+    
+    if len(ans) == n :
+        tmp_sum = 0
+        for i in range(1,n) :
+            tmp_sum+=abs(ans[i-1]-ans[i])
+        max_sum = max(max_sum,tmp_sum)
+    for i in range(n) :
+        if not visited[i] :
+            visited[i] = True
+            ans.append(li[i])
+            dfs()
+            visited[i] = False
+            ans.pop()
+dfs()
+print(max_sum)
+
+#10971 고민중..,,,,..
+n = int(input())
+li = [list(map(int,input().split())) for _ in range(n)]
+
+visited = [[False for _ in range(n)] for _ in range(n)]
+ans = []
+min_sum = 1000000*n
+def dfs() :
+    global min_sum, now
+    
+    if len(ans) == n :
+        
+        tmp_sum = sum(ans)
+        min_sum = min(min_sum,tmp_sum)
+    for i in range(n) :
+        for j in range(n) :
+            if not visited[i][j] and li[i][j] != 0:
+                visited[i][:] = True
+                visited[j][i] = True
+                ans.append(li[i][j])
+                dfs()
+                visited[i][:] = False
+                visited[j][i] = False
+                ans.pop()
+dfs()
+print(min_sum)
