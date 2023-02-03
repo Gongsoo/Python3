@@ -1,0 +1,17 @@
+#15666
+n,m = map(int,input().split())
+li = list(map(int,input().split()))
+li = sorted(set(li))
+ans = []
+def dfs(start) :
+    if len(ans) == m :
+        for i in ans :
+            print(i,end=' ')
+        return
+    tmp = 0
+    for i in range(start,len(li)) :
+        ans.append(li[i])
+        dfs(i)
+        ans.pop()
+
+dfs(0)
