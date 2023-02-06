@@ -1,0 +1,26 @@
+n = int(input())
+cost = [list(map(int,input().split(' '))) for _ in range(n)]
+visited = [False for _ in range(n)]
+arr = []
+ans = 10000000
+def dfs(start,now,val,cnt) :
+    global ans
+    if cnt == n :
+        if cost[now][start] :
+            val += cost[now][start]
+            if ans > val :
+                ans = val
+        return
+    if val > ans :
+        return
+    for i in range(n) :
+        if not visited[i] and cost[now][i]!=0 :
+            visited[i] = True
+            dfs(start,i,val+cost[now][i],cnt+1)
+            visited[i] = False
+
+for i in range(n) :
+    visited[i] = True
+    dfs(i,i,0,1)
+    visited[i] = False
+print(ans)
