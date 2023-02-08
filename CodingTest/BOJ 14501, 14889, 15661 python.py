@@ -89,3 +89,37 @@ for i in range(allstat, -1, -1):
     if bot_up[i]:
         print(allstat - i)
         break
+
+# 2529
+n = int(input())
+li = list(map(str,input().split()))
+num = list(range(10))
+visited = [False for _ in range(10)]
+arr = []
+ans = []
+def dfs() :
+    if len(arr) == n+1 :
+        for i in range(n) :
+            if li[i] == '>' :
+                if arr[i] > arr[i+1] :
+                    continue
+                else :
+                    break
+            else:
+                if arr[i] < arr[i+1] :
+                    continue
+                else :
+                    break
+        else:
+            ans.append(''.join(map(str,arr)))
+        return
+    for i in range(10):
+        if not visited[i] :
+            visited[i] = True
+            arr.append(num[i])
+            dfs()
+            visited[i] = False
+            arr.pop()
+dfs()
+print(ans[-1])
+print(ans[0])
