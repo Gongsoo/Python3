@@ -104,3 +104,33 @@ def dfs(x,g,visited,cost,summits,min_cost) :
             dfs(i,g,visited,cost,summits,min_cost)
             visited[i] = False
             min_cost.pop()
+# heap으로 구현
+# 왜 heap이냐? h에 (강도,노드) 이렇게 저장할건데 강도가 낮은순서대로 돌고싶음,, 
+# set은 왜 해줌? -> summits가 리스트면 확인할때마다 최대 O(n)의 시간이 걸림 그래서 set으로 해줌(이걸 해쉬화라고 하는건가..?)
+from collections import defaultdict
+import heapq
+def solution(n, paths, gates, summits):
+    answer = []
+    h = []
+    g = defaultdict(list)
+    costs = [10000001 for _ in range(n+1)]
+    summits = set(summits)
+    for x,y,z in paths :
+        g[x].append((y,z))
+        g[y].append((x,z))
+    for gate in gates :
+        heapq.heappush(h,(0,gate))
+        costs[gate] = 0
+    while h :
+        cost, node = heapq.heappop(h)
+        if node in summits or cost > costs[node] :
+            continue
+        for idn, idc in g[node] :
+            max_cost = max(idc,cost)
+            if max_cost < costs[idn] :
+                costs[idn] = max_cost
+                heapq.heappush(h,(max_cost,idn))
+    for summit in summits :
+        answer.append((summit,costs[summit]))
+    answer.sort(key = lambda x:(x[1],x[0]))
+    return answer[0]
