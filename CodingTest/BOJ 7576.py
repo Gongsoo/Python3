@@ -53,4 +53,65 @@ for __ in range(k) :
                 start.append((nx,ny))
         
         
-#
+#16947 
+import sys
+from collections import deque
+input = sys.stdin.readline
+sys.setrecursionlimit(10**9)
+
+
+def dfs(idx, cnt):
+    if cycle_station[idx]:
+        if cnt - distance[idx] >= 3:
+            return idx
+        else: return -1
+        
+    cycle_station[idx] = 1
+    distance[idx] = cnt
+    
+    for y in link[idx]:
+        cycleStartNode = dfs(y, cnt + 1)
+        
+        if cycleStartNode != -1:
+            cycle_station[idx] = 2
+            if idx == cycleStartNode: return -1
+            else: return cycleStartNode
+            
+    return -1
+
+if __name__ == '__main__':
+    N = int(input())
+    link = [[] * N for _ in range(N)]
+    # cycle_station[i] = 0 : 방문하지 않은 노드
+    # cycle_station[i] = 1 : 방문한 노드
+    # cycle_station[i] = 2 : 사이클에 속하는 노드
+    cycle_station = [0] * N
+    distance = [0] * N
+
+    for _ in range(N):
+        a, b = map(int, input().split())
+        link[a - 1].append(b - 1)
+        link[b - 1].append(a - 1)
+
+    dfs(1, 0)
+
+    queue = deque()
+    for i in range(N):
+        if cycle_station[i] == 2:
+            queue.append(i)
+            distance[i] = 0
+            
+        else:
+            distance[i] = -1
+            
+    while queue:
+        now = queue.popleft()
+        
+        for y in link[now]:
+            if distance[y] == -1:
+                queue.append(y)
+                distance[y] = distance[now] + 1
+                
+    print(*distance)
+    
+
