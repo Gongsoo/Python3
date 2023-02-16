@@ -107,3 +107,52 @@ if is_dfs[0] != 1 :
     exit()
 if not dfs(is_dfs) :
     print(0)
+    
+#2146 내일 풀어볼게요
+#아이디어 : 섬 테두리좌표를 얻어놨는데 그거보다 그냥 바로 bfs해ㅓ 다 채우던가 아니면 좌표기반으로 다시 bfs할것인가 고민해보쟈
+import sys
+from collections import deque
+sys.setrecursionlimit(10**6)
+input = sys.stdin.readline
+
+
+def dfs(is_dfs) :
+    tmp = is_dfs.popleft()
+    if not is_dfs :
+        print(1)
+        exit()
+    visited[tmp] = True
+    set_g = set(g[tmp])
+    for i in range(len(g[tmp])) :
+        if is_dfs[0] in set_g and not visited[is_dfs[0]] :
+            dfs(is_dfs)
+    return False
+
+def bfs(g,num,now) :
+    q= deque([now])
+    while q :
+        tx, ty = q.popleft()
+        for idx, idy in [(0,1),(0,-1),(1,0),(-1,0)] :
+            nx, ny = idx+tx, idy+ty
+            if 0<=nx<n and 0<=ny<n and not visited[nx][ny] and g[nx][ny]==1:
+                visited[nx][ny] = True
+                q.append([nx,ny])
+                g[nx][ny] -= num
+            elif 0<=nx<n and 0<=ny<n and g[nx][ny] == 0 :
+                side[-1].add((nx,ny))
+
+
+n = int(input())
+g = [list(map(int,input().strip('/n').split())) for _ in range(n)]
+visited = [[False for _ in range(n)] for _ in range(n)]
+num = 2
+side = []
+for i in range(n) :
+    for j in range(n) :
+        if g[i][j] == 1 :
+            side.append(set())
+            g[i][j] -=num
+            visited[i][j] = True
+            bfs(g,num,[i,j])
+            num+=1
+
