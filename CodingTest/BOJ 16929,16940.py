@@ -73,3 +73,37 @@ while q :
         else :
             q.append(j)
 print(1)
+
+
+#16964 set은 신이다
+import sys
+from collections import deque
+sys.setrecursionlimit(10**6)
+input = sys.stdin.readline
+
+
+def dfs(is_dfs) :
+    tmp = is_dfs.popleft()
+    if not is_dfs :
+        print(1)
+        exit()
+    visited[tmp] = True
+    set_g = set(g[tmp])
+    for i in range(len(g[tmp])) :
+        if is_dfs[0] in set_g and not visited[is_dfs[0]] :
+            dfs(is_dfs)
+    return False
+
+n = int(input())
+g = [[] for _ in range(n+1)]
+for _ in range(n-1) :
+    a, b = map(int,input().split())
+    g[a].append(b)
+    g[b].append(a)
+visited = [False for _ in range(n+1)]
+is_dfs = deque(list(map(int,input().strip('/n').split())))
+if is_dfs[0] != 1 :
+    print(0)
+    exit()
+if not dfs(is_dfs) :
+    print(0)
