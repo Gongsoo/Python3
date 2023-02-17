@@ -1,0 +1,63 @@
+#메뉴 리뉴얼
+
+from itertools import combinations
+from collections import Counter
+       
+
+def solution(orders, course):
+    result = []
+    for c in course :
+        com = []
+        for o in orders :
+            com += combinations(sorted(o),c)
+        most_order = Counter(com).most_common()
+        for i, j in most_order :
+            if j>1 and j==most_order[0][1] :
+                result.append(i)
+        
+    return [''.join(r) for r in sorted(result)]
+# 배운것 : combinations의 활용
+# Counter().most_common() 가장 빈번하게 나오는 key와 value 반환 
+
+#숫자변환
+
+from collections import deque 
+def solution(x, y, n):
+    dp = [1000000 for _ in range(1000001)]
+    dp[x] = 0
+    q=deque([])
+    q.append(x)
+    while q:
+        x = q.popleft()
+        if x + n <= 1000000 and dp[x + n] == 1000000:
+            dp[x + n] = dp[x] + 1
+            q.append(x + n)
+        if x * 2 <= 1000000 and dp[x * 2] == 1000000:
+            dp[x * 2] = dp[x] + 1
+            q.append(x * 2)
+        if x * 3 <= 1000000 and dp[x * 3] == 1000000:
+            dp[x * 3] = dp[x] + 1
+            q.append(x * 3)
+    return -1 if dp[y] == 1000000 else dp[y]
+    
+#이모티콘
+from itertools import product
+def solution(users, emoticons):
+    ans = [0,0]
+    discount = list(product((10,20,30,40),repeat=len(emoticons)))
+    for d in discount :
+        sold = [0,0]
+        for i in users :
+            price = 0
+            for emo, dis in zip(emoticons,d) :
+                if dis >= i[0] :
+                    price += emo*(1-dis/100)
+            if price >= i[1] :
+                sold[0] +=1
+            else:
+                sold[1] +=price
+        ans = max(sold,ans)
+    return ans
+#배운것 itertools의 product
+#product(list,repeat=int) list를 중복조합
+#product = [(x,y) for x in list for y in list] 이런식으로 구현가능
