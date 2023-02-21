@@ -1,0 +1,51 @@
+#14226
+from collections import deque
+
+target = int(input())
+S = [1000] * 1001
+visited = [[1000 for _ in range(1001)] for _ in range(1001)]
+
+clip = 0
+dis = 1
+q= deque([(dis,clip)])
+visited[dis][clip] = 0
+while q :
+    d, c= q.popleft()
+    if visited[d][d] == 1000:
+        visited[d][d] = True
+        visited[d][d] = visited[d][c] + 1
+        q.append((d,d))
+    if d+c < 1001 and visited[d+c][c] == 1000 :
+        visited[d+c][c] = True
+        visited[d+c][c] = visited[d][c] + 1
+        q.append((d+c,c))
+    if d-1>=0 and visited[d-1][c] == 1000 :
+        visited[d-1][c] = True
+        visited[d-1][c] = visited[d][c] + 1
+        q.append((d-1,c))
+
+    
+print(min(*visited[target]))
+
+#13549
+from collections import deque
+n,x = map(int,input().split())
+q = deque()
+visited = [-1] * 100001
+q.append(n)
+visited[n] = 0
+
+while q :
+    tmp = q.popleft()
+    
+    save = tmp
+    while save != 0 and save < 100001 :
+        if visited[save] == -1:
+            visited[save] = visited[tmp]
+            q.append(save)
+        save*=2
+    for i in [tmp-1,tmp+1] :
+        if 0<=i<100001 and visited[i] == -1 :
+            visited[i] = visited[tmp] + 1
+            q.append(i)
+print(visited[x])
