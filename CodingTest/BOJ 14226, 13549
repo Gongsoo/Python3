@@ -49,3 +49,67 @@ while q :
             visited[i] = visited[tmp] + 1
             q.append(i)
 print(visited[x])
+
+#1261
+import sys
+from collections import deque
+
+input = sys.stdin.readline
+
+n, m = map(int,input().split())
+board = [list(map(int,input().strip('\n'))) for _ in range(m)]
+visited = [[False]*n for _ in range(m)]
+q = deque([(0,0,0)])
+visited[0][0] = True
+while q :
+    x, y, z = q.popleft()
+    if (x,y) == (n-1,m-1) :
+        answer = z
+        break
+    for idx, idy in [(0,1),(0,-1),(-1,0),(1,0)] :
+        nx, ny = idx+x,idy+y
+        if 0<=nx<n and 0<=ny<m and not visited[ny][nx] :
+            if board[ny][nx] == 0:
+                visited[ny][nx] = True
+                q.appendleft((nx,ny,z))
+            elif board[ny][nx] == 1:
+                visited[ny][nx] = True
+                q.append((nx,ny,z+1))
+print(answer)
+
+#1991
+import sys
+from collections import deque
+
+input = sys.stdin.readline
+
+n = int(input())
+
+tree = {}
+for i in range(n):
+    a,b,c = map(str,input().split())
+    tree[a] = [b,c]
+
+def pre(r) :
+    if r != '.' :
+        print(r, end='')
+        pre(tree[r][0])
+        pre(tree[r][1])
+
+def ino(r) :
+    if r != '.' :
+        ino(tree[r][0])
+        print(r, end='')
+        ino(tree[r][1])
+
+def post(r) :
+    if r != '.' :
+        post(tree[r][0])
+        post(tree[r][1])
+        print(r, end='')
+
+pre('A')
+print()
+ino('A')
+print()
+post('A')
