@@ -1,0 +1,26 @@
+#6603
+
+while True :
+    raw = list(map(int,input().split()))
+    if raw == [0] :
+        break
+    
+    n = raw[0]
+    li = raw[1:]
+    visited = [False for _ in range(len(li))]
+    arr = []
+    
+    def dfs(start) :
+        if len(arr) == 6 :
+            for i in sorted(arr) :
+                print(i,end=' ')
+            return
+        for i in range(start,n) :
+            if not visited[i] :
+                visited[i] = True
+                arr.append(li[i])
+                dfs(i)
+                visited[i] = False
+                arr.pop()
+    dfs(0)
+    print('\n')
